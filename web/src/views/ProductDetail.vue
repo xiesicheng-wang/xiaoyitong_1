@@ -75,7 +75,7 @@ onMounted(async () => {
 <style scoped>
 .page { max-width: 1000px; margin: 24px auto; }
 .title { margin: 0 0 8px; }
-.price { color: #e24b4a; font-size: 28px; font-weight: 600; margin-bottom: 16px; }
+.price { color: #e0557f; font-size: 28px; font-weight: 600; margin-bottom: 16px; }
 .desc { margin-bottom: 8px; }
 .desc-text { white-space: pre-wrap; color: #606266; }
 </style>

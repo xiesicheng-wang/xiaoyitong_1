@@ -83,6 +83,8 @@ function onLogout() {
 .brand {
   font-size: 20px;
   font-weight: 600;
+  color: #c94d7e;
+  letter-spacing: 1px;
 }
 .right {
   display: flex;

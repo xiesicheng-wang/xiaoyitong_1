@@ -73,6 +73,7 @@ async function onSubmit() {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  background: linear-gradient(135deg, #fceaf1 0%, #fdf3f7 45%, #fef8fb 100%);
 }
 .auth-card {
   width: 380px;
@@ -81,6 +82,8 @@ async function onSubmit() {
 .title {
   text-align: center;
   margin: 8px 0 0;
+  color: #c94d7e;
+  letter-spacing: 2px;
 }
 .subtitle {
   text-align: center;

@@ -7,9 +7,9 @@
 </script>
 
 <style>
+/* 全局底色由 styles/theme.css 提供（浅粉渐变），此处不再覆盖 */
 body {
   margin: 0;
-  background-color: #f5f7fa;
   font-family: "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 </style>

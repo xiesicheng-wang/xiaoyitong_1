@@ -1,0 +1,85 @@
+/**
+ * 友邻帮 · 浅粉主题
+ *
+ * 依据 Element Plus 官方主题定制文档（CSS Variables 方式）：
+ * 覆盖 --el-color-primary 及其 light-3/5/7/8/9、dark-2 五档变体，
+ * 组件库全量换装，无需 SCSS 重编译。
+ */
+
+:root {
+  /* 主色：浅玫瑰粉 */
+  --el-color-primary: #ee7bab;
+  --el-color-primary-light-3: #f39ec1;
+  --el-color-primary-light-5: #f7bdd5;
+  --el-color-primary-light-7: #fadce7;
+  --el-color-primary-light-8: #fceaf1;
+  --el-color-primary-light-9: #fdf3f7;
+  --el-color-primary-dark-2: #c95d8d;
+
+  /* 辅助色向暖色调和 */
+  --el-color-success: #5fb878;
+  --el-color-warning: #e6a23c;
+  --el-color-danger: #e0557f;
+  --el-color-error: #e0557f;
+
+  /* 文字与边框：暖棕调，避免冷灰和粉色打架 */
+  --el-text-color-primary: #4a3b41;
+  --el-text-color-regular: #6b5b62;
+  --el-border-color: #f3d9e3;
+  --el-border-color-light: #f6e2ea;
+  --el-border-color-lighter: #f9ecf1;
+
+  /* 圆角：柔和感 */
+  --el-border-radius-base: 8px;
+  --el-border-radius-small: 6px;
+
+  /* 全局背景：极浅粉 */
+  --el-bg-color-page: #fdf3f7;
+  --el-fill-color-lighter: #fdf3f7;
+}
+
+body {
+  background: linear-gradient(160deg, #fdf3f7 0%, #fceaf1 55%, #fff7fa 100%);
+  min-height: 100vh;
+}
+
+/* 卡片：粉色柔光阴影 */
+.el-card {
+  --el-card-border-color: #f6e2ea;
+  box-shadow: 0 4px 18px rgba(238, 123, 171, 0.1) !important;
+  border-radius: 12px !important;
+}
+
+/* 按钮：胶囊化 */
+.el-button {
+  border-radius: 18px;
+}
+
+/* 标签：圆角胶囊 */
+.el-tag {
+  border-radius: 10px;
+}
+
+/* 输入框聚焦变粉 */
+.el-input__wrapper:focus-within,
+.el-textarea__inner:focus {
+  box-shadow: 0 0 0 1px var(--el-color-primary) inset !important;
+}
+
+/* 细滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #f4b3cb;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 分页器激活页 */
+.el-pagination.is-background .el-pager li.is-active {
+  background: var(--el-color-primary);
+}
