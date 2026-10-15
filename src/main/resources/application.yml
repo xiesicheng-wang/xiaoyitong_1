@@ -34,6 +34,11 @@ youlinbang:
     access-key: ${MINIO_USER:minioadmin}
     secret-key: ${MINIO_PASSWORD:minioadmin}
     bucket: youlinbang
+  order:
+    # 履约截止分钟数：超时未完成判买家违约（演示期可调小）
+    timeout-minutes: 30
+    # 违约金比例（%），从买家冻结款扣除给卖家
+    penalty-percent: 20
   upload:
     max-size-mb: 5
     allowed-types: image/jpeg,image/png,image/webp,image/gif

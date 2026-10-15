@@ -26,6 +26,10 @@
           </el-descriptions>
           <el-divider content-position="left">商品描述</el-divider>
           <p class="desc-text">{{ product.description || '（卖家很懒，没有写描述）' }}</p>
+          <el-button v-if="canBuy" type="danger" size="large" class="buy" :loading="buying" @click="onBuy">
+            立即下单（冻结 ¥{{ product.price }}）
+          </el-button>
+          <div v-if="canBuy" class="buy-tip">下单即预约服务，款项预冻结；完成交易后结算给卖家，超时未完成将扣除违约金</div>
         </el-col>
       </el-row>
     </el-card>
@@ -33,13 +37,35 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '../api/request'
+import { useUserStore } from '../stores/user'
 
 const route = useRoute()
 const router = useRouter()
+const store = useUserStore()
 const product = ref(null)
+const buying = ref(false)
+
+// 自己的商品不能买
+const canBuy = computed(() => product.value && store.user && product.value.userId !== store.user.id)
+
+async function onBuy() {
+  await ElMessageBox.confirm(
+    `下单将预冻结 ¥${product.value.price}，若超时未完成交易将扣除 ${20}% 违约金，确认下单？`,
+    '确认下单', { type: 'warning' }
+  )
+  buying.value = true
+  try {
+    await request.post('/orders', { productId: product.value.id })
+    ElMessage.success('下单成功，款项已冻结')
+    router.push('/orders')
+  } finally {
+    buying.value = false
+  }
+}
 
 onMounted(async () => {
   product.value = await request.get(`/products/${route.params.id}`)

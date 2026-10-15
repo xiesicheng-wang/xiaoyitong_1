@@ -7,6 +7,8 @@ const routes = [
   { path: '/products/new', name: 'productCreate', component: () => import('../views/ProductCreate.vue') },
   { path: '/products/:id', name: 'productDetail', component: () => import('../views/ProductDetail.vue') },
   { path: '/realname', name: 'realname', component: () => import('../views/Realname.vue') },
+  { path: '/wallet', name: 'wallet', component: () => import('../views/Wallet.vue') },
+  { path: '/orders', name: 'orders', component: () => import('../views/Orders.vue') },
   { path: '/me', name: 'me', component: () => import('../views/Home.vue') }
 ]
 
