@@ -1,4 +1,4 @@
-# 前端
-web/node_modules/
-web/dist/
+# 依赖与构建产物（相对 web/ 目录）
+node_modules/
+dist/
 *.log
