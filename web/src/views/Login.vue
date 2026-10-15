@@ -4,8 +4,8 @@
       <h2 class="title">友邻帮</h2>
       <p class="subtitle">社区互助服务平台</p>
       <el-form :model="form" label-position="top" @keyup.enter="onSubmit">
-        <el-form-item label="用户名">
-          <el-input v-model="form.username" placeholder="请输入用户名" />
+        <el-form-item label="用户名 / 手机号">
+          <el-input v-model="form.username" placeholder="请输入用户名或手机号" />
         </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="form.password" type="password" show-password placeholder="请输入密码" />

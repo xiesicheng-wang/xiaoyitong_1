@@ -13,6 +13,9 @@
         <el-form-item label="确认密码">
           <el-input v-model="form.confirm" type="password" show-password placeholder="再输入一次" />
         </el-form-item>
+        <el-form-item label="手机号（11 位，作为唯一识别键）">
+          <el-input v-model="form.phone" placeholder="用于登录和社区联系" maxlength="11" />
+        </el-form-item>
         <el-form-item label="昵称（选填，默认同用户名）">
           <el-input v-model="form.nickname" placeholder="别人看到的名字" />
         </el-form-item>
@@ -33,11 +36,15 @@ import request from '../api/request'
 
 const router = useRouter()
 const loading = ref(false)
-const form = reactive({ username: '', password: '', confirm: '', nickname: '' })
+const form = reactive({ username: '', password: '', confirm: '', phone: '', nickname: '' })
 
 async function onSubmit() {
   if (!form.username || !form.password) {
     ElMessage.warning('请填写用户名和密码')
+    return
+  }
+  if (!/^1[3-9]\d{9}$/.test(form.phone)) {
+    ElMessage.warning('请输入正确的 11 位手机号')
     return
   }
   if (form.password !== form.confirm) {
@@ -49,6 +56,7 @@ async function onSubmit() {
     await request.post('/auth/register', {
       username: form.username,
       password: form.password,
+      phone: form.phone,
       nickname: form.nickname || undefined
     })
     ElMessage.success('注册成功，请登录')

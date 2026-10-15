@@ -11,7 +11,7 @@ spring:
     # Connector/J 9.x 用 Java 字符集名 UTF-8，连接 MySQL 时自动映射 utf8mb4
     url: jdbc:mysql://localhost:3306/youlinbang?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: ${MYSQL_PASSWORD:}
+    password: 123456
 
 mybatis-plus:
   configuration:
@@ -29,3 +29,11 @@ youlinbang:
     # TODO: 生产环境用环境变量注入，长度需 >= 256bit
     secret: ${JWT_SECRET:youlinbang-dev-secret-key-change-me-in-production-0123456789abcdef}
     expire-hours: 72
+  minio:
+    endpoint: http://127.0.0.1:9000
+    access-key: ${MINIO_USER:minioadmin}
+    secret-key: ${MINIO_PASSWORD:minioadmin}
+    bucket: youlinbang
+  upload:
+    max-size-mb: 5
+    allowed-types: image/jpeg,image/png,image/webp,image/gif

@@ -11,6 +11,7 @@ public class UserVO {
     private Long id;
     private String username;
     private String nickname;
+    private String phone;
     private String avatar;
     private Integer creditScore;
     private Integer realnameStatus;
@@ -20,6 +21,7 @@ public class UserVO {
         vo.setId(u.getId());
         vo.setUsername(u.getUsername());
         vo.setNickname(u.getNickname());
+        vo.setPhone(u.getPhone());
         vo.setAvatar(u.getAvatar());
         vo.setCreditScore(u.getCreditScore());
         vo.setRealnameStatus(u.getRealnameStatus());

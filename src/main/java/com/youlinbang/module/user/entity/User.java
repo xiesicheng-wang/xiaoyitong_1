@@ -25,6 +25,9 @@ public class User {
 
     private String nickname;
 
+    /** 手机号（唯一，可用于登录） */
+    private String phone;
+
     private String avatar;
 
     private Integer creditScore;

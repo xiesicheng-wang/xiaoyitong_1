@@ -32,26 +32,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO register(RegisterDTO dto) {
-        Long exists = userMapper.selectCount(new LambdaQueryWrapper<User>()
+        Long nameExists = userMapper.selectCount(new LambdaQueryWrapper<User>()
                 .eq(User::getUsername, dto.getUsername()));
-        if (exists > 0) {
+        if (nameExists > 0) {
             throw BusinessException.business("用户名已被占用");
+        }
+        Long phoneExists = userMapper.selectCount(new LambdaQueryWrapper<User>()
+                .eq(User::getPhone, dto.getPhone()));
+        if (phoneExists > 0) {
+            throw BusinessException.business("手机号已被注册");
         }
         User user = new User();
         user.setUsername(dto.getUsername());
         // 密码只存 BCrypt 哈希，绝不存明文
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setPhone(dto.getPhone());
         user.setNickname(dto.getNickname() == null || dto.getNickname().isBlank()
                 ? dto.getUsername() : dto.getNickname());
         userMapper.insert(user);
-        log.info("新用户注册: id={}, username={}", user.getId(), user.getUsername());
+        log.info("新用户注册: id={}, username={}, phone={}", user.getId(), user.getUsername(), dto.getPhone());
         return UserVO.from(user);
     }
 
     @Override
     public LoginVO login(LoginDTO dto) {
+        // 账号 = 用户名 或 手机号（手机号是唯一识别键）
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, dto.getUsername()));
+                .and(w -> w.eq(User::getUsername, dto.getUsername())
+                        .or()
+                        .eq(User::getPhone, dto.getUsername())));
         // 用户名不存在与密码错误统一提示，防止账号枚举
         if (user == null || !passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw BusinessException.unauthorized("用户名或密码错误");
