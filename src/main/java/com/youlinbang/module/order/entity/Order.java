@@ -21,11 +21,16 @@ public class Order {
 
     private String orderNo;
 
+    /** 订单类型：PRODUCT / SKILL */
+    private String orderType;
+
     private Long buyerId;
 
     private Long sellerId;
 
     private Long productId;
+
+    private Long skillId;
 
     private BigDecimal amount;
 

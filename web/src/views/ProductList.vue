@@ -11,6 +11,7 @@
       </div>
       <div class="right">
         <el-button type="primary" @click="router.push('/products/new')">发布商品</el-button>
+        <el-button text type="warning" @click="router.push('/skills')">技能服务</el-button>
         <el-button v-if="store.user?.role === 1" text type="warning" @click="router.push('/admin')">管理后台</el-button>
         <el-button text @click="router.push('/wallet')">钱包</el-button>
         <el-button text @click="router.push('/orders')">订单</el-button>

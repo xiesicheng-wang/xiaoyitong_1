@@ -5,8 +5,11 @@ import com.youlinbang.module.order.vo.OrderVO;
 
 public interface OrderService {
 
-    /** 买家下单：冻结全款，生成履约截止时间 */
+    /** 买家下单（商品）：冻结全款，生成履约截止时间 */
     OrderVO create(Long buyerId, Long productId);
+
+    /** 买家预约技能服务：同样冻结全款 */
+    OrderVO createSkill(Long buyerId, Long skillId);
 
     /** 卖家确认完成：结算 + 双方信誉分 */
     OrderVO complete(Long orderId, Long sellerId);

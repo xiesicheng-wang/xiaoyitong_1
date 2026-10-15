@@ -24,11 +24,18 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    /** 下单（预约服务，冻结全款） */
+    /** 下单（购买商品，冻结全款） */
     @PostMapping
     public Result<OrderVO> create(@Valid @RequestBody CreateDTO dto, HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         return Result.ok(orderService.create(userId, dto.getProductId()));
+    }
+
+    /** 预约技能服务（冻结全款） */
+    @PostMapping("/skill")
+    public Result<OrderVO> createSkill(@Valid @RequestBody SkillDTO dto, HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        return Result.ok(orderService.createSkill(userId, dto.getSkillId()));
     }
 
     @GetMapping("/bought")
@@ -65,5 +72,11 @@ public class OrderController {
     public static class CreateDTO {
         @NotNull(message = "商品 id 不能为空")
         private Long productId;
+    }
+
+    @Data
+    public static class SkillDTO {
+        @NotNull(message = "技能 id 不能为空")
+        private Long skillId;
     }
 }
