@@ -1,0 +1,22 @@
+import { createRouter, createWebHistory } from 'vue-router'
+
+const routes = [
+  { path: '/', name: 'home', component: () => import('../views/Home.vue') },
+  { path: '/login', name: 'login', component: () => import('../views/Login.vue') },
+  { path: '/register', name: 'register', component: () => import('../views/Register.vue') }
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+// 全局守卫：未登录只能访问 login / register
+router.beforeEach((to) => {
+  const token = localStorage.getItem('token')
+  if (!token && to.name !== 'login' && to.name !== 'register') {
+    return { name: 'login' }
+  }
+})
+
+export default router
