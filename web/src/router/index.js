@@ -9,6 +9,17 @@ const routes = [
   { path: '/realname', name: 'realname', component: () => import('../views/Realname.vue') },
   { path: '/wallet', name: 'wallet', component: () => import('../views/Wallet.vue') },
   { path: '/orders', name: 'orders', component: () => import('../views/Orders.vue') },
+  {
+    path: '/admin',
+    component: () => import('../views/admin/AdminLayout.vue'),
+    children: [
+      { path: '', name: 'adminDashboard', component: () => import('../views/admin/AdminDashboard.vue') },
+      { path: 'realnames', name: 'adminRealnames', component: () => import('../views/admin/AdminRealname.vue') },
+      { path: 'products', name: 'adminProducts', component: () => import('../views/admin/AdminProduct.vue') },
+      { path: 'orders', name: 'adminOrders', component: () => import('../views/admin/AdminOrder.vue') },
+      { path: 'users', name: 'adminUsers', component: () => import('../views/admin/AdminUser.vue') }
+    ]
+  },
   { path: '/me', name: 'me', component: () => import('../views/Home.vue') }
 ]
 
