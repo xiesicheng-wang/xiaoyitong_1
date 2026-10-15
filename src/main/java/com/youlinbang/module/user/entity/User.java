@@ -38,6 +38,9 @@ public class User {
     /** 账号状态：0正常 1封禁 */
     private Integer status;
 
+    /** 角色：0普通用户 1管理员 */
+    private Integer role;
+
     @TableLogic
     private Integer deleted;
 

@@ -11,6 +11,7 @@
       </div>
       <div class="right">
         <el-button type="primary" @click="router.push('/products/new')">发布商品</el-button>
+        <el-button text @click="router.push('/realname')">实名认证</el-button>
         <el-button text @click="router.push('/me')">我的</el-button>
         <el-button text type="danger" @click="onLogout">退出</el-button>
       </div>
