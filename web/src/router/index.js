@@ -12,6 +12,8 @@ const routes = [
   { path: '/realname', name: 'realname', component: () => import('../views/Realname.vue') },
   { path: '/wallet', name: 'wallet', component: () => import('../views/Wallet.vue') },
   { path: '/orders', name: 'orders', component: () => import('../views/Orders.vue') },
+  { path: '/chat', name: 'chat', component: () => import('../views/Chat.vue') },
+  { path: '/nearby', name: 'nearby', component: () => import('../views/Nearby.vue') },
   {
     path: '/admin',
     component: () => import('../views/admin/AdminLayout.vue'),

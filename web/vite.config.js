@@ -11,6 +11,12 @@ export default defineConfig({
       '/api': {
         target: process.env.VITE_API_TARGET || 'http://localhost:8080',
         changeOrigin: true
+      },
+      // WebSocket 群聊：ws 代理需要 ws:true
+      '/ws': {
+        target: process.env.VITE_API_TARGET || 'http://localhost:8080',
+        ws: true,
+        changeOrigin: true
       }
     }
   }
