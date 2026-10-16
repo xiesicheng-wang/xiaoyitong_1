@@ -16,6 +16,8 @@ export const useUserStore = defineStore('user', {
       this.user = data.user
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
+      // 登录时间戳：前端会话 24 小时有效，过期自动踢回登录页
+      localStorage.setItem('loginAt', String(Date.now()))
     },
     async fetchMe() {
       this.user = await request.get('/user/me')
@@ -26,6 +28,7 @@ export const useUserStore = defineStore('user', {
       this.user = null
       localStorage.removeItem('token')
       localStorage.removeItem('user')
+      localStorage.removeItem('loginAt')
     }
   }
 })

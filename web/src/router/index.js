@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { sessionExpired, clearSession } from '../api/request'
 
 const routes = [
   { path: '/', name: 'home', component: () => import('../views/ProductList.vue') },
@@ -33,9 +34,13 @@ const router = createRouter({
   routes
 })
 
-// 全局守卫：未登录只能访问 login / register
+// 全局守卫：未登录只能访问 login / register；会话超时（24h）自动清登录态
 router.beforeEach((to) => {
   const token = localStorage.getItem('token')
+  if (token && sessionExpired()) {
+    clearSession()
+    return { name: 'login' }
+  }
   if (!token && to.name !== 'login' && to.name !== 'register') {
     return { name: 'login' }
   }

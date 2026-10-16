@@ -183,11 +183,23 @@ public class OrderServiceImpl implements OrderService {
         return overdue.size();
     }
 
-    /** 超时违约：违约金(比例)给服务方，余额退买家，买家信誉 -10 */
+    /** 超时违约：违约金(比例)给服务方，余额退买家，买家信誉 -10
+     *  幂等保护：多实例部署时调度器可能同时扫到同一订单，
+     *  用条件更新 (status=0 → 3) 抢占处理权，抢不到的实例直接放弃资金操作 */
     private void closeAsOverdue(Order o) {
         BigDecimal penalty = o.getAmount()
                 .multiply(BigDecimal.valueOf(penaltyPercent))
                 .divide(BigDecimal.valueOf(100), 2, RoundingMode.DOWN);
+        // 先抢占：只有从 status=0 成功翻转为 3 的实例才执行资金操作
+        o.setPenalty(penalty);
+        o.setStatus(3);
+        int claimed = orderMapper.update(o, new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<Order>()
+                .eq(Order::getId, o.getId())
+                .eq(Order::getStatus, 0));
+        if (claimed == 0) {
+            log.info("订单已被其他实例处理，跳过: orderId={}", o.getId());
+            return;
+        }
         if (penalty.compareTo(BigDecimal.ZERO) > 0) {
             walletService.penaltyToSeller(o.getBuyerId(), o.getSellerId(), o.getId(), penalty, "超时未完成");
         }
@@ -195,9 +207,6 @@ public class OrderServiceImpl implements OrderService {
         if (refund.compareTo(BigDecimal.ZERO) > 0) {
             walletService.refund(o.getBuyerId(), o.getId(), refund, "违约关闭退回：" + o.getOrderNo());
         }
-        o.setPenalty(penalty);
-        o.setStatus(3);
-        orderMapper.updateById(o);
         deductCredit(o.getBuyerId(), 10);
         notificationService.notify(o.getBuyerId(), "订单违约",
                 "订单 " + o.getOrderNo() + " 超时未完成，已扣除违约金 " + penalty + " 元，信誉分 -10", "ORDER", o.getId());
