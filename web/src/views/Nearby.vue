@@ -1,15 +1,9 @@
 <template>
   <div class="page">
-    <el-header class="header">
-      <div class="brand">友邻帮</div>
-      <div class="title">附近的人 <el-tag size="small">基于 Redis GEO</el-tag></div>
-      <div class="right">
-        <el-button text @click="router.push('/chat')">群聊</el-button>
-        <el-button text @click="router.push('/')">二手市场</el-button>
-      </div>
-    </el-header>
+    <SiteHeader />
 
     <el-main class="main">
+      <div class="nearby-title">附近的人 <el-tag size="small">基于 Redis GEO</el-tag></div>
       <el-card>
         <div class="toolbar">
           <el-button type="primary" :loading="locating" @click="locateAndReport">
@@ -47,6 +41,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 
 const locating = ref(false)
@@ -93,13 +88,8 @@ async function leave() {
 
 <style scoped>
 .page { min-height: 100vh; }
-.header {
-  display: flex; align-items: center; gap: 16px;
-  background: #fff; border-radius: 8px; margin-top: 12px; padding: 0 24px; height: 60px;
-}
-.brand { font-size: 20px; font-weight: 600; color: #c94d7e; }
-.right { margin-left: auto; }
 .main { max-width: 760px; margin: 12px auto; padding: 0 16px; }
+.nearby-title { font-weight: 600; margin-bottom: 10px; }
 .toolbar { display: flex; gap: 12px; align-items: center; }
 .tip { margin-top: 10px; color: #909399; font-size: 12px; }
 </style>

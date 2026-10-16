@@ -11,11 +11,15 @@ import com.youlinbang.module.product.entity.Product;
 import com.youlinbang.module.product.mapper.ProductMapper;
 import com.youlinbang.module.product.service.ProductService;
 import com.youlinbang.module.product.vo.ProductVO;
+import com.youlinbang.module.user.entity.User;
+import com.youlinbang.module.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,6 +27,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
+    private final UserMapper userMapper;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -49,7 +54,13 @@ public class ProductServiceImpl implements ProductService {
                         w -> w.like(Product::getTitle, keyword).or().like(Product::getDescription, keyword))
                 .orderByDesc(Product::getCreateTime);
         Page<Product> result = productMapper.selectPage(new Page<>(page, size), qw);
-        List<ProductVO> records = result.getRecords().stream().map(ProductVO::from).toList();
+        Map<Long, String> names = sellerNames(result.getRecords());
+        List<ProductVO> records = result.getRecords().stream()
+                .map(p -> {
+                    ProductVO vo = ProductVO.from(p);
+                    vo.setSellerName(names.get(p.getUserId()));
+                    return vo;
+                }).toList();
         return new PageResult<>(records, result.getTotal(), page, size);
     }
 
@@ -64,7 +75,21 @@ public class ProductServiceImpl implements ProductService {
                 .eq(Product::getId, id)
                 .setSql("view_count = view_count + 1"));
         p.setViewCount(p.getViewCount() == null ? 1 : p.getViewCount() + 1);
-        return ProductVO.from(p);
+        ProductVO vo = ProductVO.from(p);
+        vo.setSellerName(sellerNames(List.of(p)).get(p.getUserId()));
+        return vo;
+    }
+
+    /** 卖家昵称批量填充（避免 N+1） */
+    private Map<Long, String> sellerNames(List<Product> products) {
+        List<Long> ids = products.stream().map(Product::getUserId).distinct().toList();
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return userMapper.selectBatchIds(ids).stream()
+                .collect(Collectors.toMap(User::getId,
+                        u -> u.getNickname() == null || u.getNickname().isBlank() ? u.getUsername() : u.getNickname(),
+                        (a, b) -> a));
     }
 
     private String toJson(List<String> images) {

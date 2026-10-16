@@ -1,5 +1,7 @@
 <template>
+  <SiteHeader />
   <div class="page" v-if="product">
+    <div class="wrap">
     <el-button text @click="router.back()">← 返回</el-button>
     <el-card class="detail">
       <el-row :gutter="24">
@@ -21,6 +23,7 @@
                 {{ ['', '已下架', '已售出'][product.status] || '在售' }}
               </el-tag>
             </el-descriptions-item>
+            <el-descriptions-item label="卖家">{{ product.sellerName || '邻居' }}</el-descriptions-item>
             <el-descriptions-item label="浏览量">{{ product.viewCount }}</el-descriptions-item>
             <el-descriptions-item label="发布时间">{{ product.createTime }}</el-descriptions-item>
           </el-descriptions>
@@ -33,6 +36,7 @@
         </el-col>
       </el-row>
     </el-card>
+    </div>
   </div>
 </template>
 
@@ -40,6 +44,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 import { useUserStore } from '../stores/user'
 
@@ -73,7 +78,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page { max-width: 1000px; margin: 24px auto; }
+.page { max-width: 1000px; margin: 20px auto; padding: 0 16px; }
+.wrap { margin-top: 4px; }
 .title { margin: 0 0 8px; }
 .price { color: #e0557f; font-size: 28px; font-weight: 600; margin-bottom: 16px; }
 .desc { margin-bottom: 8px; }

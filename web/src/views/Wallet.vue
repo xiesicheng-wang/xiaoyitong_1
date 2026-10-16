@@ -1,4 +1,5 @@
 <template>
+  <SiteHeader />
   <div class="page">
     <el-card class="balance-card">
       <div class="balance-row">
@@ -54,6 +55,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 
 const wallet = ref(null)

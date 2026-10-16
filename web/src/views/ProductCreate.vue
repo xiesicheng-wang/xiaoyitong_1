@@ -1,4 +1,5 @@
 <template>
+  <SiteHeader />
   <div class="page">
     <el-card class="form-card">
       <template #header>发布二手商品</template>
@@ -44,6 +45,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 
 const router = useRouter()

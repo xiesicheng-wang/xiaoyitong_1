@@ -1,4 +1,5 @@
 <template>
+  <SiteHeader />
   <div class="page">
     <el-card>
       <template #header>
@@ -39,6 +40,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 
 const tab = ref('bought')

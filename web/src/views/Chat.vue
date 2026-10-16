@@ -1,17 +1,14 @@
 <template>
   <div class="page">
-    <el-header class="header">
-      <div class="brand">友邻帮</div>
-      <div class="title">社区群聊 <el-tag size="small" :type="connected ? 'success' : 'danger'">
-        {{ connected ? `在线 ${onlineTip}` : '未连接' }}</el-tag></div>
-      <div class="right">
-        <el-button text @click="router.push('/skills')">技能服务</el-button>
-        <el-button text @click="router.push('/nearby')">附近的人</el-button>
-        <el-button text @click="router.push('/')">二手市场</el-button>
-      </div>
-    </el-header>
+    <SiteHeader />
 
     <el-main class="main">
+      <div class="chat-head">
+        <span class="chat-title">社区群聊</span>
+        <el-tag size="small" :type="connected ? 'success' : 'danger'">
+          {{ connected ? '已连接' : '未连接' }}
+        </el-tag>
+      </div>
       <el-card class="chat-card">
         <div class="messages" ref="box">
           <div v-for="(m, i) in messages" :key="i" class="line" :class="{ mine: m.userId === store.user?.id, sys: m.type === 'system' }">
@@ -36,8 +33,8 @@
 
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 
 const router = useRouter()
@@ -97,14 +94,9 @@ onUnmounted(() => { clearTimeout(reconnectTimer); ws?.close() })
 
 <style scoped>
 .page { min-height: 100vh; }
-.header {
-  display: flex; align-items: center; gap: 20px;
-  background: #fff; border-radius: 8px; margin-top: 12px; padding: 0 24px; height: 60px;
-}
-.brand { font-size: 20px; font-weight: 600; color: #c94d7e; }
-.title { font-weight: 600; }
-.right { margin-left: auto; }
 .main { max-width: 800px; margin: 12px auto; padding: 0 16px; }
+.chat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.chat-title { font-weight: 600; }
 .chat-card :deep(.el-card__body) { padding: 16px; }
 .messages {
   height: 55vh; overflow-y: auto; background: #fdf3f7;

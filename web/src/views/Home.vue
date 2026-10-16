@@ -1,15 +1,9 @@
 <template>
   <div class="page">
-    <el-header class="header">
-      <div class="brand">友邻帮</div>
-      <div class="title">个人中心</div>
-      <div class="right">
-        <el-button text @click="router.push('/skills')">技能市场</el-button>
-        <el-button text @click="router.push('/')">二手市场</el-button>
-      </div>
-    </el-header>
+    <SiteHeader />
 
     <el-main class="main">
+      <div class="center-title">个人中心</div>
       <!-- 个人信息卡 -->
       <el-card class="profile">
         <div class="avatar">{{ (store.user?.nickname || store.user?.username || '?').slice(0, 1) }}</div>
@@ -94,6 +88,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 import { useUserStore } from '../stores/user'
 
@@ -128,13 +123,8 @@ onMounted(loadMine)
 
 <style scoped>
 .page { min-height: 100vh; }
-.header {
-  display: flex; align-items: center; gap: 20px;
-  background: #fff; border-radius: 8px; margin-top: 12px; padding: 0 24px; height: 60px;
-}
-.brand { font-size: 20px; font-weight: 600; color: #c94d7e; }
-.right { margin-left: auto; }
 .main { max-width: 860px; margin: 12px auto; padding: 0 16px; }
+.center-title { font-weight: 600; margin-bottom: 10px; }
 .profile { display: flex; align-items: center; gap: 20px; }
 .avatar {
   width: 64px; height: 64px; border-radius: 50%;

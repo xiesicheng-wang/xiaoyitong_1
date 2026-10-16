@@ -17,6 +17,8 @@ public class ProductVO {
 
     private Long id;
     private Long userId;
+    /** 卖家昵称（列表/详情展示用） */
+    private String sellerName;
     private String title;
     private String description;
     private BigDecimal price;

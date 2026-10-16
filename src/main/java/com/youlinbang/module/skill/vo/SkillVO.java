@@ -11,6 +11,8 @@ public class SkillVO {
 
     private Long id;
     private Long userId;
+    /** 提供者昵称（展示用） */
+    private String sellerName;
     private String title;
     private String description;
     private String category;

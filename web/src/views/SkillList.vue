@@ -1,23 +1,16 @@
 <template>
   <div class="page">
-    <el-header class="header">
-      <div class="brand">友邻帮</div>
-      <div class="search">
-        <el-input v-model="keyword" placeholder="搜技能：修电脑 / 家教 / 代取..." clearable @keyup.enter="load(1)">
-          <template #append><el-button @click="load(1)">搜索</el-button></template>
-        </el-input>
-      </div>
-      <div class="right">
-        <el-button type="primary" @click="router.push('/skills/new')">挂出我的技能</el-button>
-        <el-button text @click="router.push('/products/new')">二手市场</el-button>
-        <el-button text @click="router.push('/wallet')">钱包</el-button>
-        <el-button text @click="router.push('/orders')">订单</el-button>
-        <el-button text @click="router.push('/realname')">实名认证</el-button>
-        <el-button text type="danger" @click="onLogout">退出</el-button>
-      </div>
-    </el-header>
+    <SiteHeader />
 
     <el-main class="main">
+      <div class="toolbar">
+        <el-input v-model="keyword" placeholder="搜技能：修电脑 / 家教 / 代取..." clearable class="search"
+                  @keyup.enter="load(1)">
+          <template #append><el-button @click="load(1)">搜索</el-button></template>
+        </el-input>
+        <el-button type="primary" round @click="router.push('/skills/new')">+ 挂出我的技能</el-button>
+      </div>
+
       <div class="categories">
         <el-tag v-for="c in categories" :key="c" :effect="category === c ? 'dark' : 'plain'"
                 class="cat" @click="pick(c)">{{ c }}</el-tag>
@@ -31,7 +24,7 @@
             <div class="desc">{{ s.description || '（点击查看详情）' }}</div>
             <div class="foot">
               <span class="price">¥{{ s.price }} <span class="unit">/ {{ s.priceUnit }}</span></span>
-              <span class="meta">{{ s.viewCount }} 浏览</span>
+              <span class="meta">{{ s.sellerName || '邻居' }} · {{ s.viewCount }} 浏览</span>
             </div>
           </el-card>
         </el-col>
@@ -49,11 +42,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
-import { useUserStore } from '../stores/user'
 
 const router = useRouter()
-const store = useUserStore()
 
 const categories = ['全部', '维修', '家教', '代取', '跑腿', '摄影', '其他']
 const keyword = ref('')
@@ -81,22 +73,13 @@ function pick(c) {
   load(1)
 }
 
-function onLogout() {
-  store.logout()
-  router.push('/login')
-}
-
 onMounted(load)
 </script>
 
 <style scoped>
-.header {
-  display: flex; align-items: center; gap: 20px;
-  background: #fff; border-radius: 8px; margin-top: 16px; padding: 0 24px; height: 64px;
-}
-.brand { font-size: 20px; font-weight: 600; color: #c94d7e; letter-spacing: 1px; }
-.search { flex: 1; max-width: 420px; }
-.right { margin-left: auto; display: flex; }
+.main { max-width: 1180px; margin: 0 auto; padding: 16px 20px 40px; }
+.toolbar { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
+.search { width: 340px; }
 .categories { margin-bottom: 16px; }
 .cat { cursor: pointer; margin-right: 8px; }
 .card-col { margin-bottom: 16px; }

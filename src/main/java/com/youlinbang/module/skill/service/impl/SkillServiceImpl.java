@@ -10,9 +10,15 @@ import com.youlinbang.module.skill.entity.Skill;
 import com.youlinbang.module.skill.mapper.SkillMapper;
 import com.youlinbang.module.skill.service.SkillService;
 import com.youlinbang.module.skill.vo.SkillVO;
+import com.youlinbang.module.user.entity.User;
+import com.youlinbang.module.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,6 +26,7 @@ import org.springframework.stereotype.Service;
 public class SkillServiceImpl implements SkillService {
 
     private final SkillMapper skillMapper;
+    private final UserMapper userMapper;
 
     @Override
     public SkillVO create(Long userId, SkillCreateDTO dto) {
@@ -45,8 +52,13 @@ public class SkillServiceImpl implements SkillService {
                         .and(keyword != null && !keyword.isBlank(),
                                 w -> w.like(Skill::getTitle, keyword).or().like(Skill::getDescription, keyword))
                         .orderByDesc(Skill::getCreateTime));
-        return new PageResult<>(result.getRecords().stream().map(SkillVO::from).toList(),
-                result.getTotal(), page, size);
+        Map<Long, String> names = sellerNames(result.getRecords());
+        return new PageResult<>(result.getRecords().stream()
+                .map(s -> {
+                    SkillVO vo = SkillVO.from(s);
+                    vo.setSellerName(names.get(s.getUserId()));
+                    return vo;
+                }).toList(), result.getTotal(), page, size);
     }
 
     @Override
@@ -59,7 +71,20 @@ public class SkillServiceImpl implements SkillService {
                 .eq(Skill::getId, id)
                 .setSql("view_count = view_count + 1"));
         s.setViewCount(s.getViewCount() == null ? 1 : s.getViewCount() + 1);
-        return SkillVO.from(s);
+        SkillVO vo = SkillVO.from(s);
+        vo.setSellerName(sellerNames(List.of(s)).get(s.getUserId()));
+        return vo;
+    }
+
+    private Map<Long, String> sellerNames(List<Skill> skills) {
+        List<Long> ids = skills.stream().map(Skill::getUserId).distinct().toList();
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+        return userMapper.selectBatchIds(ids).stream()
+                .collect(Collectors.toMap(User::getId,
+                        u -> u.getNickname() == null || u.getNickname().isBlank() ? u.getUsername() : u.getNickname(),
+                        (a, b) -> a));
     }
 
     @Override

@@ -1,4 +1,5 @@
 <template>
+  <SiteHeader />
   <div class="page">
     <el-card class="card">
       <template #header>实名认证</template>
@@ -46,6 +47,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 
 const info = ref(null)

@@ -1,4 +1,5 @@
 <template>
+  <SiteHeader />
   <div class="page">
     <el-card>
       <template #header>挂出我的技能</template>
@@ -35,6 +36,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import SiteHeader from '../components/SiteHeader.vue'
 import request from '../api/request'
 
 const router = useRouter()
