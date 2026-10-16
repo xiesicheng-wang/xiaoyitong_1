@@ -1,0 +1,24 @@
+/* 友邻帮小程序全局样式（浅粉主题） */
+page {
+  background: #fdf3f7;
+  color: #4a3b41;
+  font-size: 28rpx;
+}
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin: 20rpx 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(238, 123, 171, 0.1);
+}
+.price {
+  color: #e0557f;
+  font-weight: 600;
+}
+.btn-primary {
+  background: linear-gradient(120deg, #ee7bab, #f191b6);
+  color: #fff;
+  border-radius: 44rpx;
+}
+.btn-primary::after { border: none; }
+.muted { color: #909399; font-size: 24rpx; }

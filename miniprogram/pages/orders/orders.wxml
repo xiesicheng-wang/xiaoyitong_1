@@ -1,0 +1,42 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{tab === 'bought' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="bought">我买到的</view>
+    <view class="tab {{tab === 'sold' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="sold">我卖出的</view>
+  </view>
+
+  <view wx:for="{{orders}}" wx:key="id" class="card">
+    <view class="row">
+      <text class="muted">{{item.orderNo}}</text>
+      <text class="status s{{item.status}}">{{statusText(item.status)}}</text>
+    </view>
+    <view class="title">{{item.productTitle || '（商品已删除）'}}</view>
+    <view class="row">
+      <text class="price">¥{{item.amount}}</text>
+      <text wx:if="{{item.penalty > 0}}" class="muted">违约金 ¥{{item.penalty}}</text>
+    </view>
+    <view class="btns">
+      <button wx:if="{{item.status === 0 && tab === 'sold'}}" size="mini" class="btn-ok" bindtap="complete" data-id="{{item.id}}">确认完成</button>
+      <button wx:if="{{item.status === 0 && tab === 'bought'}}" size="mini" class="btn-cancel" bindtap="cancel" data-id="{{item.id}}">取消退款</button>
+      <button wx:if="{{item.status === 1}}" size="mini" class="btn-review {{reviewedIds.indexOf(item.id) >= 0 ? 'done' : ''}}"
+              bindtap="openReview" data-id="{{item.id}}" disabled="{{reviewedIds.indexOf(item.id) >= 0}}">
+        {{reviewedIds.indexOf(item.id) >= 0 ? '已评价' : '评价'}}
+      </button>
+    </view>
+  </view>
+  <view wx:if="{{!orders.length}}" class="empty muted">暂无订单</view>
+
+  <view wx:if="{{reviewVisible}}" class="mask" bindtap="closeReview">
+    <view class="dialog card" catchtap="">
+      <view class="sec">交易评价</view>
+      <view class="stars">
+        <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this"
+              class="star {{reviewForm.score >= item ? 'star-on' : ''}}"
+              bindtap="setScore" data-score="{{item}}">★</text>
+        <text class="muted">{{reviewForm.score}} 星</text>
+      </view>
+      <textarea class="input area" placeholder="说说这次交易体验（选填）" value="{{reviewForm.content}}"
+                bindinput="onReviewInput" maxlength="500" />
+      <button class="btn-primary" loading="{{reviewLoading}}" bindtap="submitReview">提交评价</button>
+    </view>
+  </view>
+</view>

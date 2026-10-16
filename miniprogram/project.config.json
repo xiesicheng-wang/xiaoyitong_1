@@ -1,0 +1,12 @@
+{
+  "description": "友邻帮小程序（appid 留白：在微信开发者工具中填入你自己的 AppID）",
+  "appid": "touristappid",
+  "compileType": "miniprogram",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true
+  },
+  "libVersion": "3.4.3"
+}

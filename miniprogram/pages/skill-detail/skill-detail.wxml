@@ -1,0 +1,17 @@
+<view class="page" wx:if="{{skill}}">
+  <view class="card">
+    <view class="muted">{{skill.category}}</view>
+    <view class="title">{{skill.title}}</view>
+    <view class="row">
+      <text class="price big">¥{{skill.price}} <text class="muted">/ {{skill.priceUnit}}</text></text>
+      <text class="fav {{favorited ? 'fav-on' : ''}}" bindtap="toggleFav">{{favorited ? '★ 已收藏' : '☆ 收藏'}}</text>
+    </view>
+    <view class="muted">提供者：{{skill.sellerName || '邻居'}}</view>
+  </view>
+  <view class="card">
+    <view class="sec">服务描述</view>
+    <view>{{skill.description || '（未填写描述，下单前请与对方沟通确认）'}}</view>
+  </view>
+  <button class="btn-primary buy" bindtap="buy">预约服务（冻结 ¥{{skill.price}}）</button>
+  <view class="muted tip">预约即预冻结全款，超时未完成将扣除 20% 违约金</view>
+</view>

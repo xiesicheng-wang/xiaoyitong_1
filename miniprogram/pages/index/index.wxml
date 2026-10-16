@@ -1,0 +1,26 @@
+<view class="page">
+  <view class="hero">把闲置流转起来，让技能照亮邻里</view>
+
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜索二手好物" value="{{keyword}}"
+           bindinput="onSearchInput" bindconfirm="search" confirm-type="search" />
+    <button class="search-btn" size="mini" bindtap="search">搜索</button>
+  </view>
+
+  <scroll-view scroll-x class="cats">
+    <view wx:for="{{categories}}" wx:key="*this"
+          class="cat {{category === item ? 'cat-active' : ''}}"
+          bindtap="pickCategory" data-cat="{{item}}">{{item}}</view>
+  </scroll-view>
+
+  <view wx:for="{{products}}" wx:key="id" class="card item" bindtap="goDetail" data-id="{{item.id}}">
+    <view class="item-title">{{item.title}}</view>
+    <view class="item-row">
+      <text class="price">¥{{item.price}}</text>
+      <text class="muted">{{item.sellerName || '邻居'}} · {{item.viewCount}}浏览</text>
+    </view>
+  </view>
+  <view wx:if="{{!products.length}}" class="empty muted">暂无商品</view>
+
+  <button class="btn-primary publish" bindtap="goPublish">+ 发布闲置</button>
+</view>

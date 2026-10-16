@@ -1,0 +1,42 @@
+<view class="page">
+  <view class="card profile" wx:if="{{user}}">
+    <view class="avatar">{{user.nickname || user.username}}</view>
+    <view class="pinfo">
+      <view class="name">{{user.nickname || user.username}}</view>
+      <view class="muted">@{{user.username}}</view>
+      <view class="tags">
+        <text class="tag t{{user.realnameStatus}}">实名：{{realnameText}}</text>
+        <text class="tag">信誉 {{user.creditScore}}</text>
+        <text wx:if="{{reviewStat.total > 0}}" class="tag">评价均分 {{reviewStat.avgScore}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="menu" bindtap="go" data-url="/pages/wallet/wallet">💰 我的钱包</view>
+    <view class="menu" bindtap="go" data-url="/pages/publish/publish">📦 发布闲置</view>
+    <view class="menu" bindtap="goFavorites">⭐ 我的收藏（{{favCount}}）</view>
+    <view class="menu" bindtap="toggleRealname">{{user.realnameStatus === 2 ? '✅ 已实名认证' : '🪪 去实名认证'}}</view>
+  </view>
+
+  <view class="card">
+    <view class="sec">收到的评价（{{reviewStat.total || 0}} 条）</view>
+    <view wx:for="{{reviews}}" wx:key="id" class="review">
+      <view class="row">
+        <text class="review-name">{{item.reviewerName}}</text>
+        <text class="price">{{item.score}} 星</text>
+      </view>
+      <view class="muted">{{item.content || '（未写评价）'}}</view>
+    </view>
+    <view wx:if="{{!reviews.length}}" class="muted">暂无评价</view>
+  </view>
+
+  <button class="logout" bindtap="logout">退出登录</button>
+
+  <view wx:if="{{favList.length}}" class="card">
+    <view class="sec">我的收藏</view>
+    <view wx:for="{{favList}}" wx:key="id" class="fav-item" bindtap="go" data-url="{{item.targetType === 'PRODUCT' ? '/pages/detail/detail?id=' + item.targetId : '/pages/skill-detail/skill-detail?id=' + item.targetId}}">
+      <text>{{item.title}}</text><text class="price">¥{{item.price}}</text>
+    </view>
+  </view>
+</view>

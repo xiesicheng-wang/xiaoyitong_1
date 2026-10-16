@@ -59,6 +59,36 @@
         <el-empty v-else description="还没有挂过技能，去挂一个赚零花钱吧" :image-size="60" />
       </el-card>
 
+      <!-- 我的收藏 -->
+      <el-card style="margin-top: 14px">
+        <template #header>我的收藏</template>
+        <el-table v-if="favorites.length" :data="favorites" stripe size="small">
+          <el-table-column label="类型" width="90">
+            <template #default="{ row }">
+              <el-tag size="small" :type="row.targetType === 'PRODUCT' ? 'success' : 'warning'">
+                {{ row.targetType === 'PRODUCT' ? '商品' : '技能' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="title" label="标题" min-width="180" />
+          <el-table-column label="价格" width="120">
+            <template #default="{ row }">
+              ¥{{ row.price }}<span v-if="row.priceUnit"> / {{ row.priceUnit }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150">
+            <template #default="{ row }">
+              <el-button size="small" text type="primary"
+                         @click="router.push(row.targetType === 'PRODUCT' ? `/products/${row.targetId}` : `/skills/${row.targetId}`)">
+                去看看
+              </el-button>
+              <el-button size="small" text type="danger" @click="removeFav(row)">取消收藏</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-empty v-else description="还没有收藏，去逛逛吧" :image-size="60" />
+      </el-card>
+
       <!-- 我的商品 -->
       <el-card style="margin-top: 14px">
         <template #header>
@@ -96,6 +126,7 @@ const router = useRouter()
 const store = useUserStore()
 const skills = ref([])
 const products = ref([])
+const favorites = ref([])
 
 const realnameText = computed(() =>
   ({ 0: '未实名', 1: '待审核', 2: '已实名' }[store.user?.realnameStatus] || '未实名'))
@@ -110,6 +141,13 @@ async function loadMine() {
   skills.value = s.records
   const p = await request.get('/products', { params: { page: 1, size: 50 } })
   products.value = p.records.filter(x => x.userId === store.user?.id)
+  favorites.value = await request.get('/favorites/my')
+}
+
+async function removeFav(row) {
+  await request.post(`/favorites/${row.targetType}/${row.targetId}/toggle`)
+  ElMessage.success('已取消收藏')
+  loadMine()
 }
 
 async function toggle(row) {

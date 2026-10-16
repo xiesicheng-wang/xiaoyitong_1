@@ -1,0 +1,10 @@
+.search-bar { display: flex; align-items: center; gap: 12rpx; padding: 20rpx 24rpx 0; }
+.search-input { flex: 1; background: #fff; border-radius: 40rpx; padding: 14rpx 28rpx; font-size: 26rpx; }
+.search-btn { background: #ee7bab; color: #fff; border-radius: 40rpx; font-size: 24rpx; }
+.cats { white-space: nowrap; padding: 20rpx 24rpx 4rpx; }
+.cat { display: inline-block; padding: 8rpx 24rpx; margin-right: 12rpx; background: #fff; border-radius: 30rpx; font-size: 26rpx; color: #6b5b62; }
+.cat-active { background: #ee7bab; color: #fff; }
+.cat-tag { margin-bottom: 8rpx; }
+.item-title { font-size: 30rpx; font-weight: 600; margin-bottom: 12rpx; }
+.item-row { display: flex; justify-content: space-between; align-items: center; }
+.empty { text-align: center; padding: 60rpx 0; }

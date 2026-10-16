@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/skills/skills",
+    "pages/orders/orders",
+    "pages/me/me",
+    "pages/login/login",
+    "pages/detail/detail",
+    "pages/skill-detail/skill-detail",
+    "pages/publish/publish",
+    "pages/wallet/wallet"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ee7bab",
+    "navigationBarTitleText": "友邻帮",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#fdf3f7"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#ee7bab",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "二手市场", "iconPath": "icons/home.png", "selectedIconPath": "icons/home-active.png" },
+      { "pagePath": "pages/skills/skills", "text": "技能服务", "iconPath": "icons/skills.png", "selectedIconPath": "icons/skills-active.png" },
+      { "pagePath": "pages/orders/orders", "text": "订单", "iconPath": "icons/orders.png", "selectedIconPath": "icons/orders-active.png" },
+      { "pagePath": "pages/me/me", "text": "我的", "iconPath": "icons/me.png", "selectedIconPath": "icons/me-active.png" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,15 @@
+<view class="page">
+  <view class="card auth">
+    <view class="title">{{ mode === 'login' ? '登录' : '注册' }}友邻帮</view>
+    <input class="input" placeholder="用户名" value="{{username}}" bindinput="onInput" data-field="username" />
+    <input class="input" placeholder="密码" password value="{{password}}" bindinput="onInput" data-field="password" />
+    <input v-if="{{mode === 'register'}}" class="input" placeholder="手机号（11 位，用于登录）" type="number"
+           maxlength="11" value="{{phone}}" bindinput="onInput" data-field="phone" />
+    <button class="btn-primary submit" loading="{{loading}}" bindtap="submit">
+      {{ mode === 'login' ? '登录' : '注册并登录' }}
+    </button>
+    <view class="switch" bindtap="switchMode">
+      {{ mode === 'login' ? '没有账号？去注册' : '已有账号？去登录' }}
+    </view>
+  </view>
+</view>

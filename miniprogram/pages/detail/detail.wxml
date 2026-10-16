@@ -1,0 +1,31 @@
+<view class="page" wx:if="{{product}}">
+  <view class="card">
+    <view class="cat muted">{{product.category}}</view>
+    <view class="title">{{product.title}}</view>
+    <view class="row">
+      <text class="price big">¥{{product.price}}</text>
+      <text class="fav {{favorited ? 'fav-on' : ''}}" bindtap="toggleFav">{{favorited ? '★ 已收藏' : '☆ 收藏'}}</text>
+    </view>
+    <view class="muted">卖家：{{product.sellerName || '邻居'}} · {{product.viewCount}} 浏览</view>
+  </view>
+
+  <view class="card">
+    <view class="sec">商品描述</view>
+    <view>{{product.description || '（卖家很懒，没有写描述）'}}</view>
+  </view>
+
+  <view class="card">
+    <view class="sec">交易评价（{{reviews.length}}）</view>
+    <view wx:for="{{reviews}}" wx:key="id" class="review">
+      <view class="row">
+        <text class="review-name">{{item.reviewerName}}</text>
+        <text class="price">{{item.score}} 星</text>
+      </view>
+      <view class="muted">{{item.content || '（未写评价）'}}</view>
+    </view>
+    <view wx:if="{{!reviews.length}}" class="muted">暂无评价</view>
+  </view>
+
+  <button wx:if="{{canBuy}}" class="btn-primary buy" bindtap="buy">立即下单（冻结 ¥{{product.price}}）</button>
+  <view wx:if="{{canBuy}}" class="muted tip">下单即预冻结全款，超时未完成将扣除 20% 违约金</view>
+</view>

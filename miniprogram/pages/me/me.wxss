@@ -1,0 +1,17 @@
+.profile { display: flex; align-items: center; gap: 24rpx; }
+.avatar {
+  width: 100rpx; height: 100rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #ee7bab, #f4b3cb);
+  color: #fff; font-size: 40rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.name { font-size: 32rpx; font-weight: 700; }
+.tags { display: flex; gap: 10rpx; margin-top: 10rpx; flex-wrap: wrap; }
+.tag { background: #fdf3f7; color: #c94d7e; font-size: 22rpx; padding: 4rpx 14rpx; border-radius: 8rpx; }
+.t2 { background: #e8f6ec; color: #5fb878; }
+.menu { padding: 24rpx 8rpx; border-bottom: 1rpx solid #f6e2ea; font-size: 28rpx; }
+.logout { margin: 30rpx 24rpx; background: #fff; color: #e0557f; border-radius: 44rpx; }
+.sec { font-weight: 600; margin-bottom: 14rpx; }
+.review { padding: 12rpx 0; border-bottom: 1rpx solid #f6e2ea; }
+.review-name { color: #c94d7e; font-weight: 600; font-size: 26rpx; }
+.fav-item { display: flex; justify-content: space-between; padding: 14rpx 0; border-bottom: 1rpx solid #f6e2ea; }

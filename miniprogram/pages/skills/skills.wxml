@@ -1,0 +1,23 @@
+<view class="page">
+  <view class="search-bar">
+    <input class="search-input" placeholder="搜技能：修电脑 / 家教..." value="{{keyword}}"
+           bindinput="onSearchInput" bindconfirm="search" confirm-type="search" />
+    <button class="search-btn" size="mini" bindtap="search">搜索</button>
+  </view>
+
+  <scroll-view scroll-x class="cats">
+    <view wx:for="{{categories}}" wx:key="*this"
+          class="cat {{category === item ? 'cat-active' : ''}}"
+          bindtap="pickCategory" data-cat="{{item}}">{{item}}</view>
+  </scroll-view>
+
+  <view wx:for="{{skills}}" wx:key="id" class="card item" bindtap="goDetail" data-id="{{item.id}}">
+    <view class="muted cat-tag">{{item.category}}</view>
+    <view class="item-title">{{item.title}}</view>
+    <view class="item-row">
+      <text class="price">¥{{item.price}} <text class="muted">/ {{item.priceUnit}}</text></text>
+      <text class="muted">{{item.sellerName || '邻居'}}</text>
+    </view>
+  </view>
+  <view wx:if="{{!skills.length}}" class="empty muted">暂无此类技能</view>
+</view>
