@@ -2,100 +2,149 @@
   <div class="page">
     <el-header class="header">
       <div class="brand">友邻帮</div>
+      <div class="title">个人中心</div>
       <div class="right">
-        <span class="welcome">你好，{{ store.user?.nickname || store.user?.username }}</span>
-        <el-button text type="danger" @click="onLogout">退出登录</el-button>
+        <el-button text @click="router.push('/skills')">技能市场</el-button>
+        <el-button text @click="router.push('/')">二手市场</el-button>
       </div>
     </el-header>
 
     <el-main class="main">
-      <el-row :gutter="16">
-        <el-col :span="8">
-          <el-card>
-            <template #header>我的信息</template>
-            <el-descriptions :column="1" border>
-              <el-descriptions-item label="用户名">{{ store.user?.username }}</el-descriptions-item>
-              <el-descriptions-item label="昵称">{{ store.user?.nickname }}</el-descriptions-item>
-              <el-descriptions-item label="信誉分">
-                <el-tag :type="creditType">{{ store.user?.creditScore }}</el-tag>
-              </el-descriptions-item>
-              <el-descriptions-item label="实名状态">
-                <el-tag :type="realnameType">{{ realnameText }}</el-tag>
-              </el-descriptions-item>
-            </el-descriptions>
-          </el-card>
-        </el-col>
-        <el-col :span="16">
-          <el-card>
-            <template #header>社区动态</template>
-            <el-empty description="二手交易、技能市场、社区公告正在建设中，敬请期待" />
-          </el-card>
-        </el-col>
-      </el-row>
+      <!-- 个人信息卡 -->
+      <el-card class="profile">
+        <div class="avatar">{{ (store.user?.nickname || store.user?.username || '?').slice(0, 1) }}</div>
+        <div class="info">
+          <div class="name">{{ store.user?.nickname || store.user?.username }}
+            <el-tag v-if="store.user?.role === 1" size="small" type="danger" effect="dark">管理员</el-tag>
+          </div>
+          <div class="sub">@{{ store.user?.username }}
+            <span v-if="store.user?.phone"> · {{ store.user.phone.slice(0, 3) }}****{{ store.user.phone.slice(7) }}</span>
+          </div>
+          <div class="tags">
+            <el-tag size="small" :type="realnameTag">实名：{{ realnameText }}</el-tag>
+            <el-tag size="small" :type="creditTag">信誉分 {{ store.user?.creditScore ?? 100 }}</el-tag>
+          </div>
+        </div>
+        <div class="quick">
+          <el-button @click="router.push('/realname')">实名认证</el-button>
+          <el-button @click="router.push('/orders')">我的订单</el-button>
+          <el-button @click="router.push('/wallet')">钱包</el-button>
+        </div>
+      </el-card>
+
+      <!-- 我的技能挂单（可上下架） -->
+      <el-card style="margin-top: 14px">
+        <template #header>
+          <div class="card-head">
+            <span>我的技能挂单</span>
+            <el-button size="small" type="primary" plain @click="router.push('/skills/new')">+ 挂新技能</el-button>
+          </div>
+        </template>
+        <el-table v-if="skills.length" :data="skills" stripe size="small">
+          <el-table-column prop="title" label="标题" min-width="160" />
+          <el-table-column label="价格" width="110">
+            <template #default="{ row }">¥{{ row.price }} / {{ row.priceUnit }}</template>
+          </el-table-column>
+          <el-table-column prop="viewCount" label="浏览" width="70" />
+          <el-table-column label="状态" width="90">
+            <template #default="{ row }">
+              <el-tag size="small" :type="row.status === 0 ? 'success' : 'info'">
+                {{ row.status === 0 ? '接单中' : '已下架' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="110">
+            <template #default="{ row }">
+              <el-button size="small" text :type="row.status === 0 ? 'danger' : 'success'"
+                         @click="toggle(row)">
+                {{ row.status === 0 ? '停止接单' : '重新接单' }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-empty v-else description="还没有挂过技能，去挂一个赚零花钱吧" :image-size="60" />
+      </el-card>
+
+      <!-- 我的商品 -->
+      <el-card style="margin-top: 14px">
+        <template #header>
+          <div class="card-head">
+            <span>我的在售商品</span>
+            <el-button size="small" type="primary" plain @click="router.push('/products/new')">+ 发布商品</el-button>
+          </div>
+        </template>
+        <el-table v-if="products.length" :data="products" stripe size="small">
+          <el-table-column prop="title" label="标题" min-width="160" />
+          <el-table-column prop="price" label="价格" width="90" />
+          <el-table-column label="状态" width="90">
+            <template #default="{ row }">
+              <el-tag size="small" :type="row.status === 0 ? 'success' : 'info'">
+                {{ ['', '已下架', '已售出'][row.status] || '在售' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-empty v-else description="还没有发布过商品" :image-size="60" />
+      </el-card>
     </el-main>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import request from '../api/request'
 import { useUserStore } from '../stores/user'
 
 const router = useRouter()
 const store = useUserStore()
+const skills = ref([])
+const products = ref([])
 
-const creditType = computed(() => {
-  const s = store.user?.creditScore ?? 0
-  return s >= 80 ? 'success' : s >= 60 ? 'warning' : 'danger'
-})
-const realnameType = computed(() => (store.user?.realnameStatus === 2 ? 'success' : 'info'))
-const realnameText = computed(() => ({ 0: '未实名', 1: '待审核', 2: '已实名' }[store.user?.realnameStatus] || '未实名'))
+const realnameText = computed(() =>
+  ({ 0: '未实名', 1: '待审核', 2: '已实名' }[store.user?.realnameStatus] || '未实名'))
+const realnameTag = computed(() =>
+  ({ 0: 'info', 1: 'warning', 2: 'success' }[store.user?.realnameStatus] || 'info'))
+const creditTag = computed(() =>
+  (store.user?.creditScore ?? 100) >= 80 ? 'success'
+    : (store.user?.creditScore ?? 100) >= 60 ? 'warning' : 'danger')
 
-// 刷新页面后拉取最新用户信息（也顺带验证 token 是否仍有效）
-onMounted(async () => {
-  try {
-    await store.fetchMe()
-  } catch {
-    /* 401 已由拦截器统一处理跳转登录 */
-  }
-})
-
-function onLogout() {
-  store.logout()
-  router.push('/login')
+async function loadMine() {
+  const s = await request.get('/skills/mine', { params: { page: 1, size: 20 } })
+  skills.value = s.records
+  const p = await request.get('/products', { params: { page: 1, size: 50 } })
+  products.value = p.records.filter(x => x.userId === store.user?.id)
 }
+
+async function toggle(row) {
+  await request.post(`/skills/${row.id}/toggle`)
+  ElMessage.success('操作成功')
+  loadMine()
+}
+
+onMounted(loadMine)
 </script>
 
 <style scoped>
-.page {
-  max-width: 1100px;
-  margin: 0 auto;
-}
+.page { min-height: 100vh; }
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  border-radius: 8px;
-  margin-top: 16px;
-  padding: 0 24px;
+  display: flex; align-items: center; gap: 20px;
+  background: #fff; border-radius: 8px; margin-top: 12px; padding: 0 24px; height: 60px;
 }
-.brand {
-  font-size: 20px;
-  font-weight: 600;
-  color: #c94d7e;
-  letter-spacing: 1px;
+.brand { font-size: 20px; font-weight: 600; color: #c94d7e; }
+.right { margin-left: auto; }
+.main { max-width: 860px; margin: 12px auto; padding: 0 16px; }
+.profile { display: flex; align-items: center; gap: 20px; }
+.avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, #ee7bab, #f4b3cb);
+  color: #fff; font-size: 28px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
 }
-.right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.welcome {
-  color: #606266;
-  font-size: 14px;
-}
-.main {
-  padding: 16px 0;
-}
+.name { font-size: 18px; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.sub { color: #909399; font-size: 13px; margin: 4px 0 8px; }
+.tags { display: flex; gap: 8px; }
+.quick { margin-left: auto; display: flex; flex-direction: column; gap: 8px; }
+.card-head { display: flex; justify-content: space-between; align-items: center; }
 </style>

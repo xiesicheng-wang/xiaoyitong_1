@@ -11,6 +11,8 @@ public class OrderVO {
 
     private Long id;
     private String orderNo;
+    /** 订单类型：PRODUCT / SKILL */
+    private String orderType;
     private Long buyerId;
     private Long sellerId;
     private Long productId;
@@ -25,6 +27,7 @@ public class OrderVO {
         OrderVO vo = new OrderVO();
         vo.setId(o.getId());
         vo.setOrderNo(o.getOrderNo());
+        vo.setOrderType(o.getOrderType());
         vo.setBuyerId(o.getBuyerId());
         vo.setSellerId(o.getSellerId());
         vo.setProductId(o.getProductId());

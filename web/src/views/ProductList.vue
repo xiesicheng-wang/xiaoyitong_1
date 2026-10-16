@@ -14,10 +14,23 @@
         <el-button text type="warning" @click="router.push('/skills')">技能服务</el-button>
         <el-button text @click="router.push('/chat')">群聊</el-button>
         <el-button text @click="router.push('/nearby')">附近</el-button>
+        <el-popover placement="bottom" :width="340" trigger="click" @show="loadNoti">
+          <template #reference>
+            <el-badge :value="unread" :hidden="unread === 0" :max="99">
+              <el-button text>通知</el-button>
+            </el-badge>
+          </template>
+          <div v-if="notiList.length">
+            <div v-for="n in notiList" :key="n.id" class="noti-item">
+              <div class="noti-title">{{ n.title }}</div>
+              <div class="noti-content">{{ n.content }}</div>
+            </div>
+            <el-button size="small" text type="primary" style="width: 100%" @click="readAll">全部已读</el-button>
+          </div>
+          <el-empty v-else description="暂无通知" :image-size="50" />
+        </el-popover>
+        <el-button text @click="router.push('/me')">我的</el-button>
         <el-button v-if="store.user?.role === 1" text type="warning" @click="router.push('/admin')">管理后台</el-button>
-        <el-button text @click="router.push('/wallet')">钱包</el-button>
-        <el-button text @click="router.push('/orders')">订单</el-button>
-        <el-button text @click="router.push('/realname')">实名认证</el-button>
         <el-button text type="danger" @click="onLogout">退出</el-button>
       </div>
     </el-header>
@@ -97,7 +110,23 @@ function onLogout() {
   router.push('/login')
 }
 
-onMounted(load)
+/* 通知：未读数 + 最近列表 */
+const unread = ref(0)
+const notiList = ref([])
+
+async function loadNoti() {
+  const data = await request.get('/notifications', { params: { page: 1, size: 6 } })
+  notiList.value = data.records
+  unread.value = Number((await request.get('/notifications/unread-count')).count)
+}
+
+async function readAll() {
+  await request.post('/notifications/read-all')
+  unread.value = 0
+  await loadNoti()
+}
+
+onMounted(() => { load(); loadNoti() })
 </script>
 
 <style scoped>
@@ -129,4 +158,7 @@ onMounted(load)
 .price { color: #e0557f; font-weight: 600; }
 .meta { color: #909399; font-size: 12px; }
 .pager { display: flex; justify-content: center; margin-top: 8px; }
+.noti-item { padding: 6px 0; border-bottom: 1px solid #f6e2ea; }
+.noti-title { font-size: 13px; font-weight: 600; }
+.noti-content { font-size: 12px; color: #909399; margin-top: 2px; }
 </style>
